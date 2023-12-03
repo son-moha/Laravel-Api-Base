@@ -1,0 +1,25 @@
+{
+    "name": "modules/auth",
+    "description": "",
+    "authors": [
+        {
+            "name": "Ice",
+            "email": "son@mohasoftware.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Modules\\Auth\\Providers\\AuthServiceProvider"
+            ],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Auth\\": ""
+        }
+    }
+}

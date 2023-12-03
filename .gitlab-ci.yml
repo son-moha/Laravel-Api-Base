@@ -1,0 +1,79 @@
+stages:
+  - quality
+  - deploy
+.tags-default: &tags-default
+  tags:
+    - devops
+
+.only-default: &only-default
+  only:
+    - dev
+
+.init_ssh: &init_ssh |
+  eval $(ssh-agent -s)
+  echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+  mkdir -p ~/.ssh
+  chmod 700 ~/.ssh
+  [[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+
+
+PHP Stan:
+  image: lyni/phpqa:8.1
+  stage: quality
+  <<: *tags-default
+  script:
+    - git fetch origin
+    - git branch
+    - cd src && composer i -n
+    - phpstan analyse app modules --level 0
+
+PHP Security:
+  image: lyni/phpqa:8.1
+  stage: quality
+  <<: *tags-default
+  script:
+    - git fetch origin
+    - git branch
+    - cd src && composer i -n
+    - local-php-security-checker
+
+PHP Copy/Paste Detector:
+  image: lyni/phpqa:8.1
+  stage: quality
+  <<: *tags-default
+  script:
+    - git fetch origin
+    - git branch
+    - cd src && composer i -n
+    - phpcpd app modules
+
+PHP Magic Number:
+  image: lyni/phpqa:8.1
+  stage: quality
+  <<: *tags-default
+  script:
+    - git fetch origin
+    - git branch
+    - cd src && composer i -n
+    - phpmnd app --ignore-numbers=2,-1,200,401,403,404,405,422,500 --ignore-funcs=round,sleep --exclude=tests --progress \
+      --extensions=default_parameter,-return,argument
+
+PHP CS:
+  image: lyni/phpqa:8.1
+  stage: quality
+  <<: *tags-default
+  script:
+    - git fetch origin
+    - git branch
+    - cd src && composer i -n
+    - phpcs --standard=PSR12 app modules
+
+dev:
+  image: lyni/php-cd:7.4-latest
+  stage: deploy
+  <<: *tags-default
+  script:
+    - *init_ssh
+    - /composer/vendor/bin/envoy run deploy --server=dev --npm=prod
+  only:
+    - dev

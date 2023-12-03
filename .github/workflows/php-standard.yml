@@ -1,0 +1,22 @@
+name: PHP check standard code
+on: [push]
+
+jobs:
+  php-quality-control:
+    runs-on: ubuntu-latest
+    container: lyni/phpqa:8.1
+    steps:
+      - name: GIT Checkout
+        uses: actions/checkout@v2
+      - name: Composer Install
+        run: cd src/ && composer i -n
+      - name: PHP Stan
+        run: cd src/ && phpstan analyse core modules --level 0
+      - name: PHP Magic Number
+        run: cd src/ && phpmnd core modules --ignore-numbers=2,-1,200,401,403,404,405,422,500 --ignore-funcs=round,sleep --exclude=tests --progress --extensions=default_parameter,-return,argument
+      - name: PHP Copy/Paste Detector
+        run: cd src/ && phpcpd core modules
+      - name: PHP Security
+        run: cd src/ && local-php-security-checker
+      - name: PHP CS
+        run: cd src/ && phpcs --standard=PSR12 core modules

@@ -1,0 +1,33 @@
+apps:
+  - name: laravel-queue-default
+    script: artisan
+    exec_mode: fork
+    interpreter: php
+    instances: 2
+    args:
+      - queue:work
+      - --tries=2
+      - --timeout=90
+      - --sleep=1
+  - name: laravel-queue-worker-mail
+    script: artisan
+    exec_mode: fork
+    interpreter: php
+    instances: 2
+    args:
+      - queue:work
+      - --queue=mail
+      - --tries=2
+      - --timeout=90
+      - --sleep=1
+  - name: laravel-queue-worker-log
+    script: artisan
+    exec_mode: fork
+    interpreter: php
+    instances: 2
+    args:
+      - queue:work
+      - --queue=log
+      - --tries=2
+      - --timeout=90
+      - --sleep=1
