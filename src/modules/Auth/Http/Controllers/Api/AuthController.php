@@ -3,10 +3,8 @@
 namespace Modules\Auth\Http\Controllers\Api;
 
 use Modules\Core\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Modules\Auth\Http\Requests\UserRequest;
-use Modules\Organization\Http\Resources\CompanyResources;
 
 class AuthController extends Controller
 {
@@ -59,7 +57,7 @@ class AuthController extends Controller
     public function user()
     {
         $userData = auth('api')->user();
-        $userData->loadMissing(['roles', 'detail.company']);
+        $userData->loadMissing(['roles']);
 
         return response(
             [
@@ -69,9 +67,7 @@ class AuthController extends Controller
                     'email'    => $userData->email,
                     'name'     => $userData->name,
                     'phone_number' => $userData->phone_number,
-                    "company" => $userData->detail->company ? new CompanyResources($userData->detail->company) : null,
                     'roles'    => $userData->roles->pluck('name')->toArray(),
-                    'campaign_id' => $userData->detail->company->campaign->id ?? null
                 ]
             ]
         );

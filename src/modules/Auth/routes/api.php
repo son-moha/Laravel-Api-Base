@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Auth\Entities\Models\Role;
-use Modules\User\Http\Controllers\Api\UserController;
 
 Route::group(['middleware' => 'guest'], function () {
     Route::post('/login', 'Api\AuthController@login')->name('login');

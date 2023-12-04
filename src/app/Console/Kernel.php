@@ -15,9 +15,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
-        $schedule->command('cvg:clear-expired-otp')->everyMinute();
-        $schedule->command('cvg:refresh-token')->daily();
+        //schedule in here
     }
 
     /**
