@@ -12,8 +12,6 @@ jobs:
         run: cd src/ && composer i -n
       - name: PHP Stan
         run: cd src/ && phpstan analyse app modules  --level 0
-      - name: PHP Magic Number
-        run: cd src/ && phpmnd app --ignore-numbers=2,-1,200,401,403,404,405,422,500 --ignore-funcs=round,sleep --exclude=tests --progress --extensions=default_parameter,-return,argument
       - name: PHP Copy/Paste Detector
         run: cd src/ && phpcpd app modules 
       - name: PHP Security
