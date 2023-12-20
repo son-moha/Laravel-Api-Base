@@ -11,12 +11,12 @@ jobs:
       - name: Composer Install
         run: cd src/ && composer i -n
       - name: PHP Stan
-        run: cd src/ && phpstan analyse core modules --level 0
+        run: cd src/ && phpstan analyse app modules  --level 0
       - name: PHP Magic Number
-        run: cd src/ && phpmnd core modules --ignore-numbers=2,-1,200,401,403,404,405,422,500 --ignore-funcs=round,sleep --exclude=tests --progress --extensions=default_parameter,-return,argument
+        run: cd src/ && phpmnd app modules  --ignore-numbers=2,-1,200,401,403,404,405,422,500 --ignore-funcs=round,sleep --exclude=tests --progress --extensions=default_parameter,-return,argument
       - name: PHP Copy/Paste Detector
-        run: cd src/ && phpcpd core modules
+        run: cd src/ && phpcpd app modules 
       - name: PHP Security
         run: cd src/ && local-php-security-checker
       - name: PHP CS
-        run: cd src/ && phpcs --standard=PSR12 core modules
+        run: cd src/ && phpcs --standard=PSR12 app modules 
